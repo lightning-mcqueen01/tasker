@@ -1,14 +1,9 @@
 const mongoose = require("mongoose");
 
 const listSchema = mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", require: true },
 
-  userId: { type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
-    require: true
-  },
-
-  name: {type: String, require: true, unique: true}
-
+  name: { type: String, require: true, unique: true },
 });
 
 const List = mongoose.model("List", listSchema);

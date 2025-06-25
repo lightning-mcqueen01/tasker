@@ -2,6 +2,7 @@ const User = require("../models/user");
 const zod = require("zod");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config");
+const bcrypt = require("bcrypt");
 
 const userData = zod.object({
   username: zod.string().email(),
@@ -22,6 +23,7 @@ const login = async (req, res) => {
 
   const { username, password } = req.body;
 
+  const hashedPassword = await bcrypt.hash(password, 10);
   // console.log(success);
   console.log(req.body);
 
@@ -30,9 +32,10 @@ const login = async (req, res) => {
   if (!user) {
     user = await User.create({
       username,
-      password,
+      password: hashedPassword,
     });
   }
+
   console.log(user);
   console.log("JWT_SECRET:", JWT_SECRET);
   const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "1h" });
